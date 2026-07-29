@@ -98,5 +98,5 @@ data.products.edges[0].node.handle
 
 ## Owner
 
-Nadeem Rehman — Founder, Armans.AI  
+Nadeem — Founder, Armans.AI  
 Lahore, Pakistan
