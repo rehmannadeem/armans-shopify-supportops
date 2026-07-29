@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Armans.AI builds reliable Shopify support and post-purchase automation systems with n8n, APIs, RAG, and human approval.">
+  <title>Armans.AI | Shopify AI SupportOps</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top">Armans.AI</a>
+    <nav aria-label="Primary navigation">
+      <a href="#build">What I Build</a>
+      <a href="#proof">Current Proof</a>
+      <a href="#reliability">Reliability</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">Shopify AI SupportOps & Automation</p>
+      <h1>Shopify AI support and post-purchase automation that does not lose the human.</h1>
+      <p class="lead">I am building n8n systems that classify customer requests, answer from store knowledge, check Shopify data, escalate risky cases, log failures, and report what customers keep asking.</p>
+      <div class="actions">
+        <a class="button primary" href="#proof">View Day 1 proof</a>
+        <a class="button secondary" href="mailto:hello@armans.ai">Contact Armans.AI</a>
+      </div>
+      <p class="status">Current status: portfolio system under active development and testing.</p>
+    </section>
+
+    <section id="build" class="section">
+      <p class="eyebrow">What I am building</p>
+      <h2>One connected Shopify SupportOps system</h2>
+      <div class="grid">
+        <article class="card"><h3>Support Triage</h3><p>Capture, validate, classify, route, and log customer enquiries.</p></article>
+        <article class="card"><h3>Knowledge & Order Assistant</h3><p>Answer from store policies and retrieve permitted Shopify data.</p></article>
+        <article class="card"><h3>Human Approval</h3><p>Escalate sensitive, uncertain, refund, and cancellation cases.</p></article>
+        <article class="card"><h3>Support Intelligence</h3><p>Measure request types, escalations, failures, and repeated questions.</p></article>
+      </div>
+    </section>
+
+    <section id="proof" class="section proof">
+      <p class="eyebrow">Day 1 technical proof</p>
+      <h2>n8n successfully read genuine Shopify development-store data</h2>
+      <div class="proof-layout">
+        <ul class="checklist">
+          <li>Created a Shopify development store and recognizable product.</li>
+          <li>Created, scoped, released, and installed a Shopify app.</li>
+          <li>Stored Client ID and Client Secret in an n8n credential.</li>
+          <li>Requested a temporary access token.</li>
+          <li>Executed a Shopify Admin GraphQL product query.</li>
+          <li>Received store name, domain, and product details as JSON.</li>
+        </ul>
+        <pre><code>Manual Trigger
+      ↓
+Get Shopify Access Token
+      ↓
+Query Shopify Products
+      ↓
+Shopify Admin GraphQL
+      ↓
+JSON store and product data</code></pre>
+      </div>
+      <p class="limit">Scope and limitation: this proof uses a Shopify development store and read-only product permission. Order lookup, RAG, recovery, analytics, and production deployment are later sprint gates.</p>
+    </section>
+
+    <section id="reliability" class="section">
+      <p class="eyebrow">Engineering standard</p>
+      <h2>Explainable, testable, and security-conscious</h2>
+      <div class="grid three">
+        <article class="card"><h3>Least privilege</h3><p>Request only the scopes required for the active workflow.</p></article>
+        <article class="card"><h3>Protected credentials</h3><p>Keep secrets in credential stores, not workflow fields, screenshots, or GitHub.</p></article>
+        <article class="card"><h3>Evidence before claims</h3><p>Use executions, exports, tests, screenshots, and documented limitations.</p></article>
+      </div>
+    </section>
+
+    <section id="about" class="section about">
+      <p class="eyebrow">About</p>
+      <h2>Nadeem Rehman — Founder, Armans.AI</h2>
+      <p>I bring approximately 25 years of systems, networking, operations, and troubleshooting exposure into modern Shopify automation. My current focus is building reliable, documented, human-controlled SupportOps workflows.</p>
+      <p><a href="mailto:hello@armans.ai">hello@armans.ai</a></p>
+    </section>
+  </main>
+
+  <footer><p>© 2026 Armans.AI. Development portfolio; no unverified client claims.</p></footer>
+</body>
+</html>

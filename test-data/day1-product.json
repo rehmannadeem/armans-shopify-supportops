@@ -1,0 +1,14 @@
+{
+  "store": "Karachi Kicks SupportOps Lab",
+  "product": {
+    "title": "Karachi Kicks Runner Pro",
+    "handle": "karachi-kicks-runner-pro",
+    "sku": "KK-RUNNER-PRO-001",
+    "price": 79.0,
+    "quantity": 25,
+    "vendor": "Karachi Kicks SupportOps Lab",
+    "productType": "Sneakers",
+    "status": "Active"
+  },
+  "note": "Fictional development-store data only."
+}

@@ -1,0 +1,19 @@
+flowchart LR
+    A[Manual Trigger<br/>Start controlled test]
+    B[Get Shopify Access Token<br/>HTTP POST]
+    C[Temporary Token<br/>Short-lived badge]
+    D[Query Shopify Products<br/>HTTP POST + GraphQL]
+    E[Shopify Admin GraphQL API<br/>2026-07]
+    F[JSON Response<br/>Store + product data]
+    G[n8n Credential Vault<br/>Client ID + Client Secret]
+    H[Shopify App<br/>read_products scope]
+    I[Karachi Kicks SupportOps Lab<br/>Development store]
+
+    A --> B
+    G --> B
+    H --> B
+    B --> C
+    C --> D
+    D --> E
+    I --> E
+    E --> F
