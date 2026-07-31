@@ -1,0 +1,488 @@
+{
+  "name": "D2 - Shopify Support Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "shopify-support-intake",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "http://127.0.0.1:5500,http://localhost:5500,https://armans.ai,https://www.armans.ai"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b97e7c87-a42a-46dd-be90-3af098bb4b0e",
+      "name": "Support Intake Webhook",
+      "webhookId": "92a5862e-4792-4acf-a8e6-aecf19a62698"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2c932a84-2162-4c88-818b-a7fdddb1c672",
+              "name": "customer_name",
+              "value": "={{ String($json.body.customer_name ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "e156237f-7c46-4ceb-8d1c-68ab5303f775",
+              "name": "email",
+              "value": "={{ String($json.body.email ?? '').trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "f3ec87e1-9207-42a5-a487-6dbdceb78bab",
+              "name": "order_number",
+              "value": "={{ String($json.body.order_number ?? '').trim().replace(/^#/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "0054f5de-1e28-464d-93ce-5dcfa0487e09",
+              "name": "request_type",
+              "value": "={{ String($json.body.request_type ?? '').trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "3c8fa531-d25a-4724-993a-c4ef4caf4a3c",
+              "name": "message",
+              "value": "={{ String($json.body.message ?? '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "2a868940-21e5-4c2a-825a-e10d262e1533",
+              "name": "source",
+              "value": "={{ String($json.body.source ?? 'web_form').trim().toLowerCase() }}",
+              "type": "string"
+            },
+            {
+              "id": "40872110-8258-436e-affa-d551cef39a94",
+              "name": "received_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8421668f-cd10-4d84-a4e4-5ea7143a1288",
+      "name": "Normalize Support Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c2a1b364-780d-403c-990f-93bc1626bf0b",
+              "leftValue": "={{ $json.customer_name }}",
+              "rightValue": "Operation: is not empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "258aa24f-b1a6-4705-8364-d1a998fdc409",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "dab7aefd-bcc9-42fe-b30a-fc86d23d3ae5",
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b8931c7f-f96a-45a1-a281-8765431f25fb",
+              "leftValue": "={{ $json.request_type }}",
+              "rightValue": "^(order_status|return|product_question|other)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "9dd7bb95-e43c-45b3-8720-3acb71273d06",
+      "name": "Validate Support Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27aed800-60e0-4f1b-96a0-4dfee7fd7cee",
+              "name": "ticket_id",
+              "value": "={{ 'TKT-' + $now.toFormat('yyyyLLdd-HHmmss-SSS') }}",
+              "type": "string"
+            },
+            {
+              "id": "35845a32-0b5a-46ba-bc66-9ea7ffcbd51a",
+              "name": "validation_status",
+              "value": "valid",
+              "type": "string"
+            },
+            {
+              "id": "f8b3273c-37e9-4e14-90e7-17eee1d73092",
+              "name": "ticket_status",
+              "value": "new",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "cfaaa205-9995-4e54-8333-579846f03a1b",
+      "name": "Prepare Valid Ticket"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "72a4133d-d88f-47ec-a5c5-1b93f360ba59",
+              "name": "validation_status",
+              "value": "invalid",
+              "type": "string"
+            },
+            {
+              "id": "e1db7abe-669f-49a5-987a-1af9f6dde3f1",
+              "name": "ticket_status",
+              "value": "rejected",
+              "type": "string"
+            },
+            {
+              "id": "9d37e176-7db7-4bef-9d90-4edf4a09c6c4",
+              "name": "validation_error",
+              "value": "missing_or_invalid_required_field",
+              "type": "string"
+            },
+            {
+              "id": "b4d9d952-26f6-4418-8e9f-71957adc3feb",
+              "name": "ticket_id",
+              "value": "={{ 'TKT-' + $now.toFormat('yyyyLLdd-HHmmss-SSS') + '-' + $execution.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        96
+      ],
+      "id": "442e543b-14a1-4c05-b879-cdc53ddaa68f",
+      "name": "Prepare Invalid Ticket"
+    },
+    {
+      "parameters": {
+        "tableId": "support_tickets",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "ticket_id",
+              "fieldValue": "={{ $json.ticket_id }}"
+            },
+            {
+              "fieldId": "customer_name",
+              "fieldValue": "={{ $json.customer_name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "request_type",
+              "fieldValue": "={{ $json.request_type }}"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $json.message }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "={{ $json.source }}"
+            },
+            {
+              "fieldId": "received_at",
+              "fieldValue": "={{ $json.received_at }}"
+            },
+            {
+              "fieldId": "validation_status",
+              "fieldValue": "={{ $json.validation_status }}"
+            },
+            {
+              "fieldId": "ticket_status",
+              "fieldValue": "={{ $json.ticket_status }}"
+            },
+            {
+              "fieldId": "order_number",
+              "fieldValue": "={{ $json.order_number }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "5ddfa8e1-163d-4750-8d0f-ddba375aac39",
+      "name": "Store Valid Ticket",
+      "credentials": {
+        "supabaseApi": {
+          "id": "nSRN41iE22EsNMSg",
+          "name": "Supabase - Armans SupportOps"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "support_tickets",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "customer_name",
+              "fieldValue": "={{ $json.customer_name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "order_number",
+              "fieldValue": "={{ $json.order_number }}"
+            },
+            {
+              "fieldId": "request_type",
+              "fieldValue": "={{ $json.request_type }}"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $json.message }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "={{ $json.source }}"
+            },
+            {
+              "fieldId": "received_at",
+              "fieldValue": "={{ $json.received_at }}"
+            },
+            {
+              "fieldId": "validation_status",
+              "fieldValue": "={{ $json.validation_status }}"
+            },
+            {
+              "fieldId": "ticket_status",
+              "fieldValue": "={{ $json.ticket_status }}"
+            },
+            {
+              "fieldId": "validation_error",
+              "fieldValue": "={{ $json.validation_error }}"
+            },
+            {
+              "fieldId": "ticket_id",
+              "fieldValue": "={{ $json.ticket_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        832,
+        96
+      ],
+      "id": "6ffb5979-c6aa-4044-8533-1ce0a0e4aed3",
+      "name": "Store Invalid Ticket",
+      "credentials": {
+        "supabaseApi": {
+          "id": "nSRN41iE22EsNMSg",
+          "name": "Supabase - Armans SupportOps"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": true,\n  \"status\": \"received\",\n  \"ticket_id\": $('Prepare Valid Ticket').first().json.ticket_id,\n  \"message\": \"Your support request has been received.\"\n} }}",
+        "options": {
+          "responseCode": 201
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1040,
+        -96
+      ],
+      "id": "4d5face5-eb15-4aa1-bb4a-cc948c648b8e",
+      "name": "Respond Valid Request"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": false,\n  \"status\": \"rejected\",\n  \"ticket_id\": $('Prepare Invalid Ticket').first().json.ticket_id,\n  \"error\": $('Prepare Invalid Ticket').first().json.validation_error,\n  \"message\": \"Please provide a valid name, email, message, and request type.\"\n} }}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1040,
+        96
+      ],
+      "id": "a042d543-d6dd-4ef4-b894-e81d871906e4",
+      "name": "Respond Invalid Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Support Intake Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Support Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Support Request": {
+      "main": [
+        [
+          {
+            "node": "Validate Support Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Support Request": {
+      "main": [
+        [
+          {
+            "node": "Prepare Valid Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Invalid Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Valid Ticket": {
+      "main": [
+        [
+          {
+            "node": "Store Valid Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Invalid Ticket": {
+      "main": [
+        [
+          {
+            "node": "Store Invalid Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Valid Ticket": {
+      "main": [
+        [
+          {
+            "node": "Respond Valid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Invalid Ticket": {
+      "main": [
+        [
+          {
+            "node": "Respond Invalid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d2f6e41a-135b-4b83-a23f-144d8175cb56",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6e2c3a30c0ba6c21d3d22f1bf24f36d10eea68d2d7f9d1c8ce640611fe27e6fa"
+  },
+  "nodeGroups": [],
+  "id": "Db4SxMLwtmZhiKcF",
+  "tags": []
+}
